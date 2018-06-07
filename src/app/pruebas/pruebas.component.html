@@ -1,0 +1,11 @@
+<ul>
+  <li *ngFor="let item of items | async">
+    {{ item.nombre }} {{ item.apellido }}
+  </li>
+</ul>
+
+<input type="text" name="nombre" id="nombre" placeholder="Nombre" [(ngModel)]="nombre">
+<br>
+<input type="text" name="apellido" id="apellido" placeholder="Apellido" [(ngModel)]="apellido">
+<br>
+<button type="button" (click)="addItem({nombre: nombre, apellido: apellido})">Insertar</button>

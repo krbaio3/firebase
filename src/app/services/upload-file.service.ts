@@ -18,12 +18,13 @@ import { FileUpload } from '../models/fileUpload';
 @Injectable({
   providedIn: 'root'
 })
-export class FilesService {
-  private basePath = '/users';
+export class UploadFileService {
+  private basePath = 'prueba';
 
   constructor(private adb: AngularFireDatabase) {}
 
   pushFileStorage(fileUpload: FileUpload, progress: { porcentaje: number }) {
+
     const storageRef = firebase.storage().ref();
     const uploadTask = storageRef
       .child(`${this.basePath}/${fileUpload.file.name}`)
