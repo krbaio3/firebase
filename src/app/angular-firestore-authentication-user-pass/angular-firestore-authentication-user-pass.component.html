@@ -1,0 +1,12 @@
+<div *ngIf="afAuth.user | async as user; else showLogin">
+  <h1>Hello {{ user.displayName }}!</h1>
+  <img [src]="user.photoURL" alt=""> metadatos:
+  <pre> {{user | json}}</pre>
+  <button (click)="logout()">Logout</button>
+</div>
+<ng-template #showLogin>
+  <p>Please login.</p>
+  <input type="email" name="user" id="user" placeholder="Introduce Email" [(ngModel)]='email'>
+  <input type="password" name="password" id="password" placeholder="Password" [(ngModel)]='password'>
+  <button (click)="login()">Login with Google</button>
+</ng-template>
