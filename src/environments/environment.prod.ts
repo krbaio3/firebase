@@ -5,7 +5,7 @@ export const environment = {
     authDomain: 'yamoshi-poc.firebaseapp.com',
     databaseURL: 'https://yamoshi-poc.firebaseio.com',
     projectId: 'yamoshi-poc',
-    storageBucket: '',
+    storageBucket: 'yamoshi-poc.appspot.com',
     messagingSenderId: '353934392371'
   }
 };
