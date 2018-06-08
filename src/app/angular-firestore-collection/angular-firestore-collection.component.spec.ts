@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PruebasComponent } from './pruebas.component';
+import { AngularFirestoreCollectionComponent } from './angular-firestore-collection.component';
 
 describe('PruebasComponent', () => {
-  let component: PruebasComponent;
-  let fixture: ComponentFixture<PruebasComponent>;
+  let component: AngularFirestoreCollectionComponent;
+  let fixture: ComponentFixture<AngularFirestoreCollectionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PruebasComponent ]
+      declarations: [ AngularFirestoreCollectionComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PruebasComponent);
+    fixture = TestBed.createComponent(AngularFirestoreCollectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

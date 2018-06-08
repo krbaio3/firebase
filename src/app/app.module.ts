@@ -8,7 +8,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AngularFireDatabaseModule} from 'angularfire2/database';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 // Rutas
 import { AppRoutingModule } from './app-routing.module';
@@ -17,7 +17,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMaterialModule } from './angular-material/angular-material.module';
 
-
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { UserComponent } from './components/user/user.component';
@@ -25,12 +24,22 @@ import { FormUploadComponent } from './components/form-upload/form-upload.compon
 import { DetailsUploadComponent } from './components/details-upload/details-upload.component';
 import { ListUploadComponent } from './components/list-upload/list-upload.component';
 import { InicioFirebaseComponent } from './components/inicio-firebase/inicio-firebase.component';
-import { PruebasComponent } from './pruebas/pruebas.component';
+import { AngularFirestoreCollectionComponent } from './angular-firestore-collection/angular-firestore-collection.component';
+import { AngularFirestoreDocumentComponent } from './angular-firestore-document/angular-firestore-document.component';
 
 registerLocaleData(localeEs);
 
 @NgModule({
-  declarations: [AppComponent, UserComponent, FormUploadComponent, DetailsUploadComponent, ListUploadComponent, InicioFirebaseComponent, PruebasComponent],
+  declarations: [
+    AppComponent,
+    UserComponent,
+    FormUploadComponent,
+    DetailsUploadComponent,
+    ListUploadComponent,
+    InicioFirebaseComponent,
+    AngularFirestoreCollectionComponent,
+    AngularFirestoreDocumentComponent,
+  ],
   imports: [
     BrowserModule,
     FormsModule,

@@ -8,12 +8,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-pruebas',
-  templateUrl: './pruebas.component.html',
-  styleUrls: ['./pruebas.component.scss']
+  selector: 'app-angular-firestore-collection',
+  templateUrl: './angular-firestore-collection.component.html',
+  styleUrls: ['./angular-firestore-collection.component.scss']
 })
-export class PruebasComponent implements OnInit {
-
+export class AngularFirestoreCollectionComponent implements OnInit {
   private itemsCollection: AngularFirestoreCollection<Datos>;
   // items: Observable<Datos[]>;
   items: Observable<DatosId[]>;
@@ -36,12 +35,27 @@ export class PruebasComponent implements OnInit {
      * lo que tenemos en firebase, para mostrar una imagen en concreto
      * */
     this.items = this.itemsCollection.snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as Datos;
-        const id = a.payload.doc.id;
-        return { id, ...data };
-      }))
+      map(actions =>
+        actions.map(a => {
+          const data = a.payload.doc.data() as Datos;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        })
+      )
     );
+
+    // Nos da datos según le digamos "qué ha ocurrido" (added, removed, and modified)
+    // this.items = this.itemsCollection
+    //   .stateChanges(['added'])
+    //   .pipe(
+    //     map(actions =>
+    //       actions.map(a => {
+    //         const data = a.payload.doc.data() as Datos;
+    //         const id = a.payload.doc.id;
+    //         return { id, ...data };
+    //       })
+    //     )
+    //   );
   }
 
   ngOnInit() {}

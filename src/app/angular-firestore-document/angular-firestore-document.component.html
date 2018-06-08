@@ -1,0 +1,14 @@
+Pruebas
+<div>
+  {{ (item | async)?.nombre}} {{ (item | async)?.apellido}} {{ (item | async)?.id}}
+</div>
+
+<input type="text" name="nombre" id="nombre" placeholder="Nombre" [(ngModel)]="nombre">
+<input type="text" name="apellido" id="apellido" placeholder="Apellido" [(ngModel)]="apellido">
+<input type="text" name="id" id="id" [placeholder]="(item|async)?.id" disabled [(ngModel)]="id">
+
+
+<button (click)="setItem({nombre: nombre, apellido: apellido})">SET</button>
+<button (click)="updateItem({nombre: nombre, apellido: apellido})">UPDATE</button>
+<button (click)="deleteItem()">DELETE</button>
+
