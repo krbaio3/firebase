@@ -13,11 +13,13 @@ import 'firebase/storage';
 import * as firebase from 'firebase';
 
 import { User } from '../../models/user';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-root',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+  styleUrls: ['./user.component.scss'],
+  providers: [AuthService]
 })
 export class UserComponent implements OnInit {
   private usersCollection: AngularFirestoreCollection<User>;
@@ -35,7 +37,7 @@ export class UserComponent implements OnInit {
   itemToUpdate: User;
   editState: boolean = false;
 
-  constructor(private afs: AngularFirestore) {}
+  constructor(private afs: AngularFirestore, private authSrv: AuthService) {}
 
   ngOnInit(): void {
     this.resetUser();
@@ -43,15 +45,17 @@ export class UserComponent implements OnInit {
     // .snapshotChanges() returns a DocumentChangeAction[], which contains
     // a lot of information about "what happened" with each change. If you want to
     // get the data and the id use the map operator.
-    this.user = this.usersCollection.snapshotChanges().pipe(
-      map(actions =>
-        actions.map(a => {
-          const data = a.payload.doc.data() as User;
-          const id = a.payload.doc.id;
-          return { id, ...data };
-        })
-      )
-    );
+    if (this.authSrv.isLoggedIn()) {
+      this.user = this.usersCollection.snapshotChanges().pipe(
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as User;
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          })
+        )
+      );
+    }
   }
 
   insert() {
