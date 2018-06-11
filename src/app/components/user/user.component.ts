@@ -14,6 +14,8 @@ import * as firebase from 'firebase';
 
 import { User } from '../../models/user';
 import { AuthService } from '../../services/auth.service';
+import { UploadFileService } from '../../services/upload-file.service';
+import { FileUpload } from '../../models/fileUpload';
 
 @Component({
   selector: 'app-user-root',
@@ -22,6 +24,10 @@ import { AuthService } from '../../services/auth.service';
   providers: [AuthService]
 })
 export class UserComponent implements OnInit {
+  currentFileUpload: FileUpload;
+  selectedFiles: FileList;
+  progress: { porcentaje: number } = { porcentaje: 0 };
+
   private usersCollection: AngularFirestoreCollection<User>;
   private userDocs: AngularFirestoreDocument;
 
@@ -37,10 +43,14 @@ export class UserComponent implements OnInit {
   itemToUpdate: User;
   editState: boolean = false;
 
-  constructor(private afs: AngularFirestore, private authSrv: AuthService) {}
+  constructor(
+    private afs: AngularFirestore,
+    private authSrv: AuthService,
+    private uploadService: UploadFileService
+  ) {}
 
   ngOnInit(): void {
-    this.resetUser();
+    this.addUser = this.resetUser();
     this.usersCollection = this.afs.collection<User>('users');
     // .snapshotChanges() returns a DocumentChangeAction[], which contains
     // a lot of information about "what happened" with each change. If you want to
@@ -64,17 +74,20 @@ export class UserComponent implements OnInit {
       this.addUser.lastname,
       this.addUser.email,
       this.addUser.contact,
-      this.addUser.image
+      this.selectedFiles.item(0).name
     );
 
     this.usersCollection.add(user);
 
-    this.resetUser();
+    this.upload();
+
+    this.addUser = this.resetUser();
   }
 
   delete(item: User): void {
     this.userDocs = this.afs.doc(`users/${item}`);
     this.userDocs.delete();
+    // this.userDocs.delete().then(response => console.log(response));
   }
 
   update(): void {
@@ -99,6 +112,24 @@ export class UserComponent implements OnInit {
       image: item.image,
       id: item.id
     };
+  }
+
+  selectFile(event) {
+    const file = event.target.files.item(0);
+
+    if (file.type.match('image.*')) {
+      this.selectedFiles = event.target.files;
+    } else {
+      alert('invalid format!');
+    }
+  }
+
+  upload() {
+    const file = this.selectedFiles.item(0);
+    this.selectedFiles = undefined;
+
+    this.currentFileUpload = new FileUpload(file);
+    this.uploadService.pushFileStorage(this.currentFileUpload, this.progress);
   }
 
   /////////////////////////////////////////

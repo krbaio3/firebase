@@ -23,7 +23,7 @@
         <input type="text" class="form-control" [(ngModel)]="addUser.contact" placeholder="Contact Number">
       </td>
       <td>
-        <input type="text" class="form-control" [(ngModel)]="addUser.image" placeholder="Image">
+        <input type="file" name="button" id="button" (change)="selectFile($event)" placeholder="Image">
       </td>
       <td>
         <button (click)="insert()">

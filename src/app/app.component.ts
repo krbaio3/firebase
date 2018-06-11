@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
     lastname: '',
     email: '',
     contact: '',
-    image: ''
+    image: '',
   };
 
   itemToUpdate: User;
@@ -108,7 +108,7 @@ export class AppComponent implements OnInit {
     lastname: string,
     email: string,
     contact: string,
-    image: string
+    image: string,
   ): User {
     return {
       name,
@@ -125,7 +125,7 @@ export class AppComponent implements OnInit {
       lastname: '',
       email: '',
       contact: '',
-      image: ''
+      image: '',
     };
   }
 }

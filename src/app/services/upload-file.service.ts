@@ -19,12 +19,11 @@ import { FileUpload } from '../models/fileUpload';
   providedIn: 'root'
 })
 export class UploadFileService {
-  private basePath = 'prueba';
+  private basePath = 'users';
 
   constructor(private adb: AngularFireDatabase) {}
 
   pushFileStorage(fileUpload: FileUpload, progress: { porcentaje: number }) {
-
     const storageRef = firebase.storage().ref();
     const uploadTask = storageRef
       .child(`${this.basePath}/${fileUpload.file.name}`)
@@ -44,9 +43,12 @@ export class UploadFileService {
         console.error(`ERROR in ${error}`),
       () => {
         // success
-        fileUpload.url = uploadTask.snapshot.downloadURL;
-        fileUpload.name = fileUpload.file.name;
-        this.saveFileData(fileUpload);
+        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+          console.log('File available at', downloadURL);
+          fileUpload.url = downloadURL;
+          fileUpload.name = fileUpload.file.name;
+          this.saveFileData(fileUpload);
+        });
       }
     );
   }
@@ -55,8 +57,10 @@ export class UploadFileService {
     return this.adb.list(this.basePath, ref => ref.limitToLast(numberItems));
   }
 
-  deleteFileupload(fileUpload: FileUpload) {
-    this.deleteFileDatabase(fileUpload.key).then(() => {});
+  deleteFileupload(fileUpload: FileList) {
+  // deleteFileupload(fileName: string): Promise < any > {
+    //return this.deleteFileDatabase(`${this.basePath}/${fileName}`).delete();
+    this.deleteFileDatabase(fileUpload.key).then(() => { });
   }
 
   //////////////////////////////
@@ -66,6 +70,7 @@ export class UploadFileService {
   }
 
   private deleteFileDatabase(key: string) {
+    // return firebase.storage().ref().child(key);
     return this.adb.list(`${this.basePath}/`).remove(key);
   }
 

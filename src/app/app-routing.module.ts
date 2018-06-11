@@ -16,6 +16,10 @@ const APP_ROUTES: Routes = [
     component: AngularFirestoreAuthenticationUserPassComponent
   },
   {
+    path: 'fireAuthMailPass',
+    component: AngularFirestoreAuthenticationUserPassComponent
+  },
+  {
     path: 'fireAuth',
     component: AngularFirestoreAuthenticationComponent
   },
