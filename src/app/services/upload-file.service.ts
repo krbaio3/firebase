@@ -14,17 +14,22 @@ import * as firebase from 'firebase';
 import { FirebaseStorage } from '@firebase/storage-types';
 
 import { FileUpload } from '../models/fileUpload';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UploadFileService {
-  private basePath = 'prueba';
+  private basePath = 'users';
+  private usersCollection: AngularFirestoreCollection<User>;
+  private userDocs: AngularFirestoreDocument;
 
-  constructor(private adb: AngularFireDatabase) {}
+  constructor(
+    private afs: AngularFirestore,
+    private adb: AngularFireDatabase
+  ) {}
 
   pushFileStorage(fileUpload: FileUpload, progress: { porcentaje: number }) {
-
     const storageRef = firebase.storage().ref();
     const uploadTask = storageRef
       .child(`${this.basePath}/${fileUpload.file.name}`)
@@ -44,9 +49,12 @@ export class UploadFileService {
         console.error(`ERROR in ${error}`),
       () => {
         // success
-        fileUpload.url = uploadTask.snapshot.downloadURL;
-        fileUpload.name = fileUpload.file.name;
-        this.saveFileData(fileUpload);
+        uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+          console.log('File available at', downloadURL);
+          fileUpload.url = downloadURL;
+          fileUpload.name = fileUpload.file.name;
+          this.saveFileData(fileUpload);
+        });
       }
     );
   }
@@ -55,22 +63,31 @@ export class UploadFileService {
     return this.adb.list(this.basePath, ref => ref.limitToLast(numberItems));
   }
 
-  deleteFileupload(fileUpload: FileUpload) {
-    this.deleteFileDatabase(fileUpload.key).then(() => {});
+  deleteFileupload(user: User) {
+    this.deleteFileDatabase(user.id)
+      .then(() => {
+        console.log('Borrado FileDataBase');
+        this.deleteFileStorage(user.image);
+      })
+      .catch(error => console.error(`ERROR: ${error}`));
   }
 
   //////////////////////////////
+
+  private deleteFileDatabase(key: string) {
+    return this.afs.doc(`${this.basePath}/${key}`).delete();
+  }
 
   private saveFileData(fileUpload: FileUpload) {
     this.adb.list(`${this.basePath}/`).push(fileUpload);
   }
 
-  private deleteFileDatabase(key: string) {
-    return this.adb.list(`${this.basePath}/`).remove(key);
-  }
-
-  private deleteFileStorage(name: string) {
+  deleteFileStorage(name: string) {
     const storageRef = firebase.storage().ref();
-    storageRef.child(`${this.basePath}/${name}`).delete();
+    storageRef
+      .child(`${this.basePath}/${name}`)
+      .delete()
+      .then(() => console.log(`Se ha borrado ${name}`))
+      .catch(error => console.error(`Error: ${error}`));
   }
 }

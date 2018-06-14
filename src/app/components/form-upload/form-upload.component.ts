@@ -19,7 +19,7 @@ export class FormUploadComponent implements OnInit {
   selectFile(event) {
     const file = event.target.files.item(0);
 
-    if (file.type.match('images.*')) {
+    if (file.type.match('image.*')) {
       this.selectedFiles = event.target.files;
     } else {
       alert('invalid format!');
