@@ -59,9 +59,6 @@
         </button>
       </td>
     </tr>
-    editState: {{editState}}
-    <br> itemToUpdate.id: {{itemToUpdate?.id}}
-    <br> item.id: {{item?.id}}
     <tr *ngIf="editState && itemToUpdate.id == item.id">
       <td colspan=5>
         <div>
@@ -76,7 +73,7 @@
               <input type="text" class="form-control" [(ngModel)]="itemToUpdate.contact" placeholder="Contact">
             </div>
             <div class="col-md-3">
-              <input type="text" class="form-control" [(ngModel)]="itemToUpdate.image" placeholder="Image">
+              <input type="file" name="button" id="button" (change)="selectFile($event)" placeholder="Image">
             </div>
             <div class="col-md-3">
               <input type="text" class="form-control" [(ngModel)]="itemToUpdate.lastname" placeholder="LastName">
@@ -98,4 +95,3 @@
     </tr>
   </tbody>
 </table>
-

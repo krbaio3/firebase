@@ -24,6 +24,7 @@ import { FileUpload } from '../../models/fileUpload';
   providers: [AuthService]
 })
 export class UserComponent implements OnInit {
+  imageOlder: string;
   currentFileUpload: FileUpload;
   selectedFiles: FileList;
   progress: { porcentaje: number } = { porcentaje: 0 };
@@ -85,9 +86,7 @@ export class UserComponent implements OnInit {
   }
 
   delete(item: User): void {
-    this.userDocs = this.afs.doc(`users/${item}`);
-    this.userDocs.delete();
-    // this.userDocs.delete().then(response => console.log(response));
+    this.uploadService.deleteFileupload(item);
   }
 
   update(): void {
@@ -95,11 +94,29 @@ export class UserComponent implements OnInit {
       name: this.itemToUpdate.name,
       lastname: this.itemToUpdate.lastname,
       email: this.itemToUpdate.email,
-      contact: this.itemToUpdate.contact,
-      image: this.itemToUpdate.image
+      contact: this.itemToUpdate.contact
     };
+
+    let equals: boolean = false;
+
+    this.selectedFiles.item(0).name !== this.imageOlder
+      ? Object.assign(user, { image: this.selectedFiles.item(0).name })
+      : (equals = true);
+
     this.userDocs = this.afs.doc(`users/${this.itemToUpdate.id}`);
-    this.userDocs.update(user);
+    this.userDocs
+      .update(user)
+      .then(() => {
+        console.log('ha ido bien');
+        if (!equals && this.imageOlder !== '') {
+          this.uploadService.deleteFileStorage(this.imageOlder);
+          this.upload();
+        } else if (this.imageOlder === ''){
+          this.upload();
+        }
+        this.clearState();
+      })
+      .catch(error => console.log('ha ido MAL'));
   }
 
   edit(item: User) {
@@ -112,6 +129,7 @@ export class UserComponent implements OnInit {
       image: item.image,
       id: item.id
     };
+    this.imageOlder = this.itemToUpdate.image;
   }
 
   selectFile(event) {
