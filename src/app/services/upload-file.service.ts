@@ -15,18 +15,23 @@ import { FirebaseStorage } from '@firebase/storage-types';
 
 import { FileUpload } from '../models/fileUpload';
 import { User } from '../models/user';
+import { AngularFireStorage } from 'angularfire2/storage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UploadFileService {
+
+  profileURL: Observable<string | null>;
+
   private basePath = 'users';
   private usersCollection: AngularFirestoreCollection<User>;
   private userDocs: AngularFirestoreDocument;
 
   constructor(
     private afs: AngularFirestore,
-    private adb: AngularFireDatabase
+    private adb: AngularFireDatabase,
+    private storage: AngularFireStorage
   ) {}
 
   pushFileStorage(fileUpload: FileUpload, progress: { porcentaje: number }) {
@@ -72,14 +77,8 @@ export class UploadFileService {
       .catch(error => console.error(`ERROR: ${error}`));
   }
 
-  //////////////////////////////
-
-  private deleteFileDatabase(key: string) {
+  deleteFileDatabase(key: string) {
     return this.afs.doc(`${this.basePath}/${key}`).delete();
-  }
-
-  private saveFileData(fileUpload: FileUpload) {
-    this.adb.list(`${this.basePath}/`).push(fileUpload);
   }
 
   deleteFileStorage(name: string) {
@@ -89,5 +88,17 @@ export class UploadFileService {
       .delete()
       .then(() => console.log(`Se ha borrado ${name}`))
       .catch(error => console.error(`Error: ${error}`));
+  }
+
+  downloadProfileUrl(profileImg: string): Observable<string>  {
+    const ref = this.storage.ref(`${this.basePath}/${profileImg}`);
+    this.profileURL = ref.getDownloadURL();
+    return this.profileURL;
+  }
+
+  //////////////////////////////
+
+  private saveFileData(fileUpload: FileUpload) {
+    this.adb.list(`${this.basePath}/`).push(fileUpload);
   }
 }

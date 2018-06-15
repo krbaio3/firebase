@@ -24,6 +24,7 @@ import { FileUpload } from '../../models/fileUpload';
   providers: [AuthService]
 })
 export class UserComponent implements OnInit {
+
   imageOlder: string;
   currentFileUpload: FileUpload;
   selectedFiles: FileList;
@@ -61,6 +62,7 @@ export class UserComponent implements OnInit {
         map(actions =>
           actions.map(a => {
             const data = a.payload.doc.data() as User;
+            data.imageURL = this.uploadService.downloadProfileUrl(data.image);
             const id = a.payload.doc.id;
             return { id, ...data };
           })
