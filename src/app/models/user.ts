@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export interface User {
   id?: string;
   name: string;
@@ -5,4 +7,5 @@ export interface User {
   email: string;
   contact: string;
   image?: string;
+  imageURL?: Observable<string>;
 }

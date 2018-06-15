@@ -8,6 +8,7 @@
       <th>Contact</th>
       <th>Image</th>
       <th>Action</th>
+      <th>Visualizacion</th>
     </tr>
     <tr>
       <td>
@@ -29,7 +30,6 @@
         <button (click)="insert()">
           <i class="material-icons orange600">add</i>
         </button>
-
       </td>
     </tr>
   </thead>
@@ -58,6 +58,9 @@
           <i class="material-icons orange600">create</i>
         </button>
       </td>
+      <td>
+        <img [src]="item.imageURL | async" [alt]="item.image" class="muestra">
+      </td>
     </tr>
     <tr *ngIf="editState && itemToUpdate.id == item.id">
       <td colspan=5>
@@ -73,13 +76,12 @@
               <input type="text" class="form-control" [(ngModel)]="itemToUpdate.contact" placeholder="Contact">
             </div>
             <div class="col-md-3">
-              <input type="file" name="button" id="button" (change)="selectFile($event)" placeholder="Image">
-            </div>
-            <div class="col-md-3">
               <input type="text" class="form-control" [(ngModel)]="itemToUpdate.lastname" placeholder="LastName">
             </div>
+            <div class="col-md-3">
+              <input type="file" name="button" id="button" (change)="selectFile($event)" placeholder="Image">
+            </div>
           </div>
-          <p></p>
           <div class="row">
             <div class="col-md-4" style="text-align:left;">
               <button class="btn btn-primary" (click)="update()">
